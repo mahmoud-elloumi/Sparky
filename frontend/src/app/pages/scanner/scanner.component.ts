@@ -1,4 +1,4 @@
-import {
+﻿import {
   Component, ElementRef, OnDestroy, OnInit, ViewChild, signal
 } from '@angular/core';
 import { Router } from '@angular/router';
@@ -20,6 +20,7 @@ export interface DevisEntry {
 }
 
 @Component({
+  standalone: false,
   selector: 'app-scanner',
   templateUrl: './scanner.component.html',
   styleUrls: ['./scanner.component.scss'],
@@ -40,7 +41,7 @@ export class ScannerComponent implements OnInit, OnDestroy {
   compareResult = signal<CompareResponse | null>(null);
   comparing = signal(false);
 
-  // Devis session — accumulates scanned devis for price comparison
+  // Devis session â€” accumulates scanned devis for price comparison
   devisSession = signal<DevisEntry[]>([]);
 
   // Manual articles form
@@ -127,7 +128,7 @@ export class ScannerComponent implements OnInit, OnDestroy {
         }
       }, 100);
     } catch {
-      this.errorMessage = "Impossible d'accéder à la caméra. Vérifiez les permissions.";
+      this.errorMessage = "Impossible d'accÃ©der Ã  la camÃ©ra. VÃ©rifiez les permissions.";
       this.step = 'error';
     }
   }
@@ -174,7 +175,7 @@ export class ScannerComponent implements OnInit, OnDestroy {
   private loadFile(file: File): void {
     const allowed = ['application/pdf', 'image/jpeg', 'image/png', 'image/tiff'];
     if (!allowed.includes(file.type)) {
-      this.errorMessage = 'Format non supporté. Utilisez PDF, JPEG, PNG ou TIFF.';
+      this.errorMessage = 'Format non supportÃ©. Utilisez PDF, JPEG, PNG ou TIFF.';
       this.step = 'error';
       return;
     }
@@ -342,7 +343,7 @@ export class ScannerComponent implements OnInit, OnDestroy {
       },
       error: (err: Error) => {
         this.exportingExcel = false;
-        alert('Erreur export Excel : ' + (err.message || 'Vérifiez que le backend est lancé'));
+        alert('Erreur export Excel : ' + (err.message || 'VÃ©rifiez que le backend est lancÃ©'));
       },
     });
   }
@@ -378,7 +379,7 @@ export class ScannerComponent implements OnInit, OnDestroy {
   get hasMontantTtc(): boolean { return this.lignes.some((l: any) => l.montant_ttc != null); }
 
   get totalColspan(): number {
-    let n = 2; // Désignation + Qté always
+    let n = 2; // DÃ©signation + QtÃ© always
     if (this.hasRef) n++;
     if (this.hasPrixU) n++;
     if (this.hasRemise) n++;

@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { DocumentService } from '../../services/document.service';
 import { DOCUMENT_TYPE_LABELS, DOCUMENT_TYPE_ICONS, DOCUMENT_TYPE_COLORS } from '../../models/document.model';
 
 @Component({
+  standalone: false,
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
@@ -72,7 +73,7 @@ export class HomeComponent {
       icon: 'document_scanner',
       route: '/scanner',
       color: '#f5c518',
-      description: 'Utilisez la caméra ou importez un fichier',
+      description: 'Utilisez la camÃ©ra ou importez un fichier',
     },
     {
       label: 'Comparateur des prix',

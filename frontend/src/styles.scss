@@ -2,26 +2,19 @@
 // SPARKY - Global Styles
 // ============================================================
 
-// Angular Material theme
+// Angular Material 20 theme (Material 3)
 @use '@angular/material' as mat;
 
-@include mat.core();
-
-$sparky-primary: mat.define-palette(mat.$indigo-palette, 800);
-$sparky-accent: mat.define-palette(mat.$amber-palette, A700);
-$sparky-warn: mat.define-palette(mat.$red-palette);
-
-$sparky-theme: mat.define-light-theme((
-  color: (
-    primary: $sparky-primary,
-    accent: $sparky-accent,
-    warn: $sparky-warn,
-  ),
-  typography: mat.define-typography-config($font-family: 'Inter, sans-serif'),
-  density: 0,
-));
-
-@include mat.all-component-themes($sparky-theme);
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$azure-palette,
+      tertiary: mat.$yellow-palette,
+    ),
+    typography: 'Inter, sans-serif',
+    density: 0,
+  ));
+}
 
 // ============================================================
 // Reset & base

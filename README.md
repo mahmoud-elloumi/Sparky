@@ -1,6 +1,8 @@
-# SPARKY
+# SPARKY (v2 — Angular 20)
 
 Plateforme web d'intelligence documentaire pour le secteur photovoltaïque tunisien. Scanne, classifie et extrait automatiquement les données de factures, devis, bons de livraison, bons de commande et avoirs grâce à Mistral AI, avec persistance PostgreSQL, authentification sécurisée, export Google Sheets et notifications email orchestrées via n8n.
+
+> **Cette version est l'upgrade v2** depuis Angular 17 → **Angular 20.3** + Material 20 (Material 3 design tokens) + Node 24 LTS. La version originale en Angular 17 reste disponible dans `C:\Sparky`.
 
 ---
 
@@ -8,7 +10,7 @@ Plateforme web d'intelligence documentaire pour le secteur photovoltaïque tunis
 
 | Couche | Technologie |
 |--------|-------------|
-| Frontend | Angular 17 (Signals, Material, RxJS) |
+| Frontend | **Angular 20.3** (Signals, Material 3, RxJS 7.8) |
 | Backend | FastAPI + Python 3.12 |
 | Base de données | PostgreSQL 18 |
 | ORM | SQLAlchemy async + asyncpg |
@@ -17,8 +19,8 @@ Plateforme web d'intelligence documentaire pour le secteur photovoltaïque tunis
 | Authentification | bcrypt (passlib) + PostgreSQL |
 | Hashing | bcrypt 4.0.1 |
 | Export | openpyxl (Excel) + Google Sheets API |
-
-> **Version v2 disponible** : `Sparky_v2` upgradé en **Angular 20.3** + Material 20 (Material 3) + Node 24 LTS. Voir section `Migration v2` plus bas.
+| Runtime Node | **Node 24 LTS** |
+| TypeScript | 5.8 |
 
 ---
 
@@ -43,7 +45,7 @@ Plateforme web d'intelligence documentaire pour le secteur photovoltaïque tunis
 ### 1. Prérequis
 
 - **Python 3.12+**
-- **Node.js 18+** (ou Node 22+ pour la v2)
+- **Node.js 24 LTS** (ou minimum Node 22.16+ pour n8n)
 - **PostgreSQL 18** (utilisateur `sparky`, base `sparky_db`)
 - **n8n** (`npm install -g n8n`)
 
@@ -197,7 +199,7 @@ Sparky/
 │   ├── services/                 Classifier, Extractor, Comparator, Normalizer, articles_db
 │   ├── requirements.txt
 │   └── .env                      Configuration (gitignored si possible)
-├── frontend/                     Angular 17
+├── frontend/                     Angular 20
 │   └── src/app/
 │       ├── pages/                login, home, scanner, documents, comparison, catalogue
 │       ├── services/             api.service, document.service, auth.service
@@ -250,21 +252,38 @@ Types ENUM : `document_type`, `document_status`, `mouvement_type`.
 
 ---
 
-## Migration v2 — Angular 20
+## Différences avec la v1 (Angular 17)
 
-Une version `Sparky_v2` est disponible avec :
-
-| Package | v1 | v2 |
-|---------|-----|-----|
-| Angular | 17.3 | **20.3** |
-| Material | 17.3 | **20.2** (Material 3) |
-| TypeScript | 5.4 | **5.8** |
+| Package | v1 (`C:\Sparky`) | v2 (cette version) |
+|---------|------------------|-------------------|
+| Angular Core | 17.3.12 | **20.3.19** |
+| Angular CLI | 17.3.17 | **20.3.24** |
+| Angular Material | 17.3.10 | **20.2.14** (Material 3) |
+| TypeScript | 5.4.2 | **5.8.3** |
+| zone.js | 0.14.3 | **0.15.1** |
 | Node | 18+ | **24 LTS** |
 
-Modifications appliquées :
-- `standalone: false` ajouté à tous les composants déclarés dans NgModule
-- `styles.scss` réécrit avec la nouvelle API `mat.theme()` (Material 3)
-- Cascade `ng update 18 → 19 → 20`
+### Modifications de code appliquées
+
+- `standalone: false` ajouté aux 9 composants déclarés dans des `NgModule`
+- `src/styles.scss` réécrit avec la nouvelle API Material 3 :
+  ```scss
+  // Avant (M2 — Angular 17)
+  $sparky-primary: mat.define-palette(mat.$indigo-palette, 800);
+  $sparky-theme: mat.define-light-theme((color: (...)));
+  @include mat.all-component-themes($sparky-theme);
+
+  // Après (M3 — Angular 20)
+  html {
+    @include mat.theme((
+      color: (primary: mat.$azure-palette, tertiary: mat.$yellow-palette),
+      typography: 'Inter, sans-serif',
+      density: 0,
+    ));
+  }
+  ```
+- Cascade `ng update 17 → 18 → 19 → 20` (managé par Angular CLI)
+- Backend, schéma DB, workflow n8n inchangés
 
 ---
 

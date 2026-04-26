@@ -8,6 +8,27 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pg_trgm";
 
 -- ============================================================
+-- TABLE: users (Authentication)
+-- ============================================================
+
+CREATE TABLE users (
+    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    email           VARCHAR(255) UNIQUE NOT NULL,
+    password_hash   TEXT NOT NULL,
+    nom             VARCHAR(255),
+    role            VARCHAR(50) DEFAULT 'user',
+    created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX idx_users_email ON users(email);
+
+-- Seed admin user (password: admin123 — bcrypt hash)
+INSERT INTO users (email, password_hash, nom, role) VALUES
+    ('admin@sparky.tn', '$2b$12$pOuNp.FLGFUcDPWWOLoVTefX03Q3RRmUO5bjzMvTLKBt4dTIlirjS', 'Admin SPARKY', 'admin');
+
+
+-- ============================================================
 -- ENUM TYPES
 -- ============================================================
 

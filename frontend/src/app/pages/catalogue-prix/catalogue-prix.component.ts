@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ApiService } from '../../services/api.service';
@@ -9,6 +9,7 @@ import {
 } from '../../models/document.model';
 
 @Component({
+  standalone: false,
   selector: 'app-catalogue-prix',
   templateUrl: './catalogue-prix.component.html',
   styleUrls: ['./catalogue-prix.component.scss'],
@@ -23,7 +24,7 @@ export class CataloguePrixComponent implements OnInit, OnDestroy {
   searchText    = '';
   filterCategorie = '';
 
-  // derived – rebuilt whenever data/filters change
+  // derived â€“ rebuilt whenever data/filters change
   categories: string[]                 = [];
   filteredArticles: ArticlePrixComparaison[] = [];
   displayedColumns: string[]           = [];
@@ -85,10 +86,10 @@ export class CataloguePrixComponent implements OnInit, OnDestroy {
     if (!this.data) return;
     const fournisseurs = this.data.fournisseurs;
     const header = [
-      'Référence', 'Article', 'Catégorie', 'Stock', 'Unité',
-      'Meilleur prix (TND)', 'Meilleur fournisseur', 'Écart max %',
-      ...fournisseurs.map(f => `${f} — prix achat`),
-      ...fournisseurs.map(f => `${f} — surcoût %`),
+      'RÃ©fÃ©rence', 'Article', 'CatÃ©gorie', 'Stock', 'UnitÃ©',
+      'Meilleur prix (TND)', 'Meilleur fournisseur', 'Ã‰cart max %',
+      ...fournisseurs.map(f => `${f} â€” prix achat`),
+      ...fournisseurs.map(f => `${f} â€” surcoÃ»t %`),
     ].join(';');
 
     const rows = this.filteredArticles.map(a => {
@@ -117,7 +118,7 @@ export class CataloguePrixComponent implements OnInit, OnDestroy {
     URL.revokeObjectURL(url);
   }
 
-  // ── private helpers ────────────────────────────────────────────────────────
+  // â”€â”€ private helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   private _buildDerived(): void {
     if (!this.data) return;

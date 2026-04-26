@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DocumentService } from '../../services/document.service';
 import { ApiService } from '../../services/api.service';
@@ -8,6 +8,7 @@ import {
 } from '../../models/document.model';
 
 @Component({
+  standalone: false,
   selector: 'app-document-detail',
   templateUrl: './document-detail.component.html',
   styleUrls: ['./document-detail.component.scss'],
@@ -47,7 +48,7 @@ export class DocumentDetailComponent implements OnInit {
 
   compareDevis(): void { this.router.navigate(['/comparer']); }
 
-  // ── Articles helpers ────────────────────────────────────────────────────────
+  // â”€â”€ Articles helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   get lignes(): LigneDocument[] { return this.document?.lignes || []; }
 
@@ -66,7 +67,7 @@ export class DocumentDetailComponent implements OnInit {
   }
 
   totalColspan(): number {
-    let n = 2; // désignation + qté
+    let n = 2; // dÃ©signation + qtÃ©
     if (this.hasRef())    n++;
     if (this.hasPrixU())  n++;
     if (this.hasRemise()) n++;
@@ -81,7 +82,7 @@ export class DocumentDetailComponent implements OnInit {
     return this.lignes.reduce((acc, l) => acc + Number((l as any).montant_ttc ?? 0), 0);
   }
 
-  // ── Export Excel ────────────────────────────────────────────────────────────
+  // â”€â”€ Export Excel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   exportExcel(): void {
     if (!this.lignes.length) return;

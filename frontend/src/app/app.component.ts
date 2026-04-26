@@ -1,10 +1,11 @@
-import { Component, OnInit, computed } from '@angular/core';
+﻿import { Component, OnInit, computed } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { ApiService } from './services/api.service';
 import { DocumentService } from './services/document.service';
 import { filter } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

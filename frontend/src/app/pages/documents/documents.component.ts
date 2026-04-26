@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+﻿import { Component, computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { DocumentService } from '../../services/document.service';
 import {
@@ -9,6 +9,7 @@ import {
 type SortKey = 'date' | 'montant' | 'type' | 'nom';
 
 @Component({
+  standalone: false,
   selector: 'app-documents',
   templateUrl: './documents.component.html',
   styleUrls: ['./documents.component.scss'],

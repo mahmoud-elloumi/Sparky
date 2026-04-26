@@ -1,11 +1,11 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+﻿import { Component, OnInit, signal, computed } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { DocumentService } from '../../services/document.service';
 import { DocumentCard, LigneDocument } from '../../models/document.model';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-// ── Types ───────────────────────────────────────────────────────────────────
+// â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export interface DocResult {
   id: string;
@@ -28,16 +28,17 @@ export interface ArticleCell {
   ligne: LigneDocument | null;
 }
 
-// ── Component ────────────────────────────────────────────────────────────────
+// â”€â”€ Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 @Component({
+  standalone: false,
   selector: 'app-price-comparison',
   templateUrl: './price-comparison.component.html',
   styleUrls: ['./price-comparison.component.scss'],
 })
 export class PriceComparisonComponent implements OnInit {
 
-  // ── state ──
+  // â”€â”€ state â”€â”€
   existingDocs   = signal<DocumentCard[]>([]);
   selectedIds    = signal<Set<string>>(new Set());
   docResults     = signal<DocResult[]>([]);
@@ -45,7 +46,7 @@ export class PriceComparisonComponent implements OnInit {
   globalError    = signal<string | null>(null);
   stockMap       = signal<Map<string, number>>(new Map());
 
-  // ── computed ──
+  // â”€â”€ computed â”€â”€
   fournisseurs = computed(() =>
     [...new Set(this.docResults().map(d => d.fournisseur).filter(Boolean))]
   );
@@ -86,7 +87,7 @@ export class PriceComparisonComponent implements OnInit {
 
   anyLoading = computed(() => this.docResults().some(d => d.loading));
 
-  // ────────────────────────────────────────────────────────────────────────────
+  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   constructor(
     private api: ApiService,
@@ -104,7 +105,7 @@ export class PriceComparisonComponent implements OnInit {
     this._loadStock();
   }
 
-  // ── Import from existing documents ─────────────────────────────────────────
+  // â”€â”€ Import from existing documents â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   toggleExistingDoc(doc: DocumentCard): void {
     const next = new Set(this.selectedIds());
@@ -131,12 +132,12 @@ export class PriceComparisonComponent implements OnInit {
       type: doc.type_document || 'devis',
       lignes,
       loading: false,
-      error: lignes.length === 0 ? 'Aucun article extrait — ré-importez ce fichier.' : null,
+      error: lignes.length === 0 ? 'Aucun article extrait â€” rÃ©-importez ce fichier.' : null,
     };
     this.docResults.update(r => [...r, result]);
   }
 
-  // ── File drag & drop / upload ───────────────────────────────────────────────
+  // â”€â”€ File drag & drop / upload â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   onDragOver(e: DragEvent): void {
     e.preventDefault();
@@ -191,7 +192,7 @@ export class PriceComparisonComponent implements OnInit {
     }
   }
 
-  // ── Remove doc ──────────────────────────────────────────────────────────────
+  // â”€â”€ Remove doc â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   removeDoc(id: string): void {
     this.docResults.update(r => r.filter(d => d.id !== id));
@@ -200,7 +201,7 @@ export class PriceComparisonComponent implements OnInit {
     this.selectedIds.set(next);
   }
 
-  // ── Fournisseur name edit ───────────────────────────────────────────────────
+  // â”€â”€ Fournisseur name edit â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   updateFournisseur(id: string, value: string): void {
     this.docResults.update(r => r.map(d =>
@@ -208,7 +209,7 @@ export class PriceComparisonComponent implements OnInit {
     ));
   }
 
-  // ── Reset ───────────────────────────────────────────────────────────────────
+  // â”€â”€ Reset â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   reset(): void {
     this.docResults.set([]);
@@ -216,7 +217,7 @@ export class PriceComparisonComponent implements OnInit {
     this.globalError.set(null);
   }
 
-  // ── Helpers ─────────────────────────────────────────────────────────────────
+  // â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   bestPrice(row: ArticleRow): number | null {
     const prices = row.items

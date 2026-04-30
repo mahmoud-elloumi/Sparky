@@ -32,9 +32,17 @@ export class DocumentsComponent {
     { label: 'Factures', value: 'facture', icon: 'receipt' },
     { label: 'BL', value: 'bon_livraison', icon: 'local_shipping' },
     { label: 'BC', value: 'bon_commande', icon: 'shopping_cart' },
-    { label: 'Avoirs', value: 'avoir', icon: 'undo' },
     { label: 'Devis', value: 'devis', icon: 'request_quote' },
+    { label: 'Avoirs', value: 'avoir', icon: 'undo' },
   ];
+
+  private readonly typeOrder: { [key: string]: number } = {
+    facture: 0,
+    bon_livraison: 1,
+    bon_commande: 2,
+    devis: 3,
+    avoir: 4,
+  };
 
   sortOptions: Array<{ label: string; value: SortKey }> = [
     { label: 'Date', value: 'date' },
@@ -61,7 +69,7 @@ export class DocumentsComponent {
       let cmp = 0;
       if (sort === 'date') cmp = a.created_at.localeCompare(b.created_at);
       else if (sort === 'montant') cmp = (a.montant_ttc || 0) - (b.montant_ttc || 0);
-      else if (sort === 'type') cmp = (a.type_document || '').localeCompare(b.type_document || '');
+      else if (sort === 'type') cmp = (this.typeOrder[a.type_document ?? ''] ?? 99) - (this.typeOrder[b.type_document ?? ''] ?? 99);
       else if (sort === 'nom') cmp = a.nom_fichier.localeCompare(b.nom_fichier);
       return asc ? cmp : -cmp;
     });

@@ -581,6 +581,29 @@ async def get_documents(
         return []
 
 
+@app.delete("/documents/{document_id}")
+async def delete_document(document_id: str, db: AsyncSession = Depends(get_db)):
+    """Supprime un document. Les tables enfants (factures, devis, lignes_*, ...) sont
+    automatiquement nettoyées via les FK ON DELETE CASCADE."""
+    from sqlalchemy import text as _text
+
+    try:
+        result = await db.execute(_text("DELETE FROM documents WHERE id = :id"), {"id": document_id})
+        await db.commit()
+
+        if result.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Document introuvable")
+
+        return {"deleted": document_id}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        await db.rollback()
+        log.warning("db_delete_document_failed", document_id=document_id, error=str(e))
+        raise HTTPException(status_code=500, detail=f"Suppression impossible: {e}")
+
+
 # ============================================================
 # ARTICLES / STOCK — Catalogue normalisé
 # ============================================================

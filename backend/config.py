@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     model_config = {
         "env_file": ".env",
         "case_sensitive": False,
+        "extra": "ignore",
     }
 
     app_env: str = "development"
@@ -20,11 +21,6 @@ class Settings(BaseSettings):
     supabase_url: str = ""
     supabase_key: str = ""
     supabase_bucket: str = "sparky-documents"
-
-    google_application_credentials: str = ""
-    google_project_id: str = ""
-    google_location: str = "eu"
-    google_processor_id: str = ""
 
     mistral_api_key: str = ""
     mistral_model: str = "mistral-small-latest"

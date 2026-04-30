@@ -1,6 +1,6 @@
 """
 Data extraction service.
-Priority: Google Document AI > Mistral AI > pdfplumber (PDF) > pytesseract (images) > regex fallback.
+Priority: Mistral AI > pdfplumber (PDF) > pytesseract (images) > easyocr > regex fallback.
 """
 import io
 import time
@@ -9,15 +9,7 @@ import json
 import base64
 from decimal import Decimal
 from datetime import date
-from typing import Optional, Any, List
-
-# Google Document AI — optional
-try:
-    from google.cloud import documentai_v1 as documentai
-    _DOCAI_AVAILABLE = True
-except ImportError:
-    documentai = None  # type: ignore
-    _DOCAI_AVAILABLE = False
+from typing import Optional, List
 
 # pdfplumber — PDF text extraction
 try:
@@ -59,17 +51,7 @@ log = structlog.get_logger()
 
 class DocumentExtractor:
     def __init__(self):
-        self._client: Optional[object] = None
-
-    def _get_client(self):
-        if not _DOCAI_AVAILABLE or not settings.google_project_id:
-            return None
-        if self._client is None:
-            try:
-                self._client = documentai.DocumentProcessorServiceClient()
-            except Exception as e:
-                log.warning("document_ai_init_failed", error=str(e))
-        return self._client
+        pass
 
     async def extract(
         self,
@@ -81,26 +63,16 @@ class DocumentExtractor:
         start = time.monotonic()
         donnees: dict = {}
 
-        # 1. Google Document AI
-        client = self._get_client()
-        if client and settings.google_processor_id:
-            try:
-                doc = await self._process_with_document_ai(client, file_content, mime_type)
-                donnees = _extract_entities(doc, type_document)
-            except Exception as e:
-                log.warning("document_ai_extract_failed", error=str(e))
+        # 1. Mistral AI (OCR + structured extraction)
+        donnees = await self._extract_with_mistral(file_content, mime_type, type_document)
 
-        # 2. Mistral AI (OCR + structured extraction)
-        if not donnees or _is_empty(donnees):
-            donnees = await self._extract_with_mistral(file_content, mime_type, type_document)
-
-        # 3. pdfplumber + regex fallback
+        # 2. pdfplumber + regex fallback
         if not donnees or _is_empty(donnees):
             text = _extract_text(file_content, mime_type)
             if text:
                 donnees = _extract_with_regex(text, type_document)
 
-        # 4. Ensure structure is always returned
+        # 3. Ensure structure is always returned
         if not donnees:
             donnees = _empty_structure(type_document)
 
@@ -222,23 +194,6 @@ class DocumentExtractor:
             log.warning("mistral_extract_failed", error=str(e))
             return {}
 
-    async def _process_with_document_ai(
-        self,
-        client: object,
-        file_content: bytes,
-        mime_type: str,
-    ) -> Any:
-        name = client.processor_path(  # type: ignore
-            settings.google_project_id,
-            settings.google_location,
-            settings.google_processor_id,
-        )
-        raw_document = documentai.RawDocument(content=file_content, mime_type=mime_type)  # type: ignore
-        request = documentai.ProcessRequest(name=name, raw_document=raw_document)  # type: ignore
-        response = client.process_document(request=request)  # type: ignore
-        return response.document
-
-
 # ============================================================
 # TEXT EXTRACTION
 # ============================================================
@@ -309,86 +264,6 @@ def _is_empty(donnees: dict) -> bool:
         v is None or v == [] or v == "" or k in skip
         for k, v in donnees.items()
     )
-
-
-# ============================================================
-# ENTITY EXTRACTION (Document AI)
-# ============================================================
-
-def _extract_entities(document: Any, doc_type: DocumentType) -> dict:
-    entities: dict[str, str] = {}
-    line_items = []
-
-    for entity in document.entities:
-        key = entity.type_.lower().replace("-", "_").replace(" ", "_")
-        val = entity.mention_text.strip()
-        entities[key] = val
-
-        if entity.type_ in ("line_item", "article"):
-            item: dict[str, Any] = {}
-            for prop in entity.properties:
-                prop_key = prop.type_.lower().replace("-", "_")
-                item[prop_key] = prop.mention_text.strip()
-            line_items.append(_build_ligne(item))
-
-    result = _build_typed_result(entities, doc_type)
-    if line_items and "lignes" in result:
-        result["lignes"] = [l.model_dump() for l in line_items]
-    return result
-
-
-def _build_ligne(item: dict) -> LigneDocument:
-    return LigneDocument(
-        reference=item.get("reference") or item.get("ref"),
-        designation=item.get("designation") or item.get("description") or "",
-        quantite=_to_decimal(item.get("quantity") or item.get("quantite")),
-        unite=item.get("unit") or item.get("unite"),
-        prix_unitaire=_to_decimal(item.get("unit_price") or item.get("prix_unitaire")),
-        montant_ht=_to_decimal(item.get("amount") or item.get("montant_ht")),
-        tva_taux=_to_decimal(item.get("tax_rate") or item.get("tva")),
-    )
-
-
-def _build_typed_result(entities: dict, doc_type: DocumentType) -> dict:
-    if doc_type == DocumentType.facture:
-        return ExtractedFacture(
-            numero_facture=entities.get("invoice_id") or entities.get("numero_facture"),
-            date_facture=_to_date(entities.get("invoice_date") or entities.get("date_facture")),
-            fournisseur_nom=entities.get("supplier_name") or entities.get("fournisseur"),
-            montant_ht=_to_decimal(entities.get("net_amount") or entities.get("montant_ht")),
-            montant_tva=_to_decimal(entities.get("vat_amount") or entities.get("montant_tva")),
-            montant_ttc=_to_decimal(entities.get("total_amount") or entities.get("montant_ttc")),
-            lignes=[],
-        ).model_dump()
-    if doc_type == DocumentType.devis:
-        return ExtractedDevis(
-            numero_devis=entities.get("quote_id") or entities.get("numero_devis"),
-            date_devis=_to_date(entities.get("quote_date") or entities.get("date_devis")),
-            fournisseur_nom=entities.get("supplier_name") or entities.get("fournisseur"),
-            montant_ht=_to_decimal(entities.get("net_amount") or entities.get("montant_ht")),
-            montant_ttc=_to_decimal(entities.get("total_amount") or entities.get("montant_ttc")),
-            lignes=[],
-        ).model_dump()
-    if doc_type == DocumentType.bon_livraison:
-        return ExtractedBonLivraison(
-            numero_bl=entities.get("delivery_note_id") or entities.get("numero_bl"),
-            fournisseur_nom=entities.get("supplier_name") or entities.get("fournisseur"),
-            lignes=[],
-        ).model_dump()
-    if doc_type == DocumentType.bon_commande:
-        return ExtractedBonCommande(
-            numero_bc=entities.get("po_number") or entities.get("numero_bc"),
-            fournisseur_nom=entities.get("supplier_name") or entities.get("fournisseur"),
-            montant_ttc=_to_decimal(entities.get("total_amount") or entities.get("montant_ttc")),
-            lignes=[],
-        ).model_dump()
-    if doc_type == DocumentType.avoir:
-        return ExtractedAvoir(
-            numero_avoir=entities.get("credit_note_id") or entities.get("numero_avoir"),
-            fournisseur_nom=entities.get("supplier_name") or entities.get("fournisseur"),
-            montant_ttc=_to_decimal(entities.get("total_amount") or entities.get("montant_ttc")),
-        ).model_dump()
-    return entities
 
 
 # ============================================================

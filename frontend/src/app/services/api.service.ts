@@ -89,6 +89,12 @@ export class ApiService {
       .pipe(catchError(this.handleError));
   }
 
+  deleteDocument(documentId: string): Observable<{ deleted: string }> {
+    return this.http
+      .delete<{ deleted: string }>(`${this.base}/documents/${documentId}`)
+      .pipe(catchError(this.handleError));
+  }
+
   login(email: string, password: string): Observable<{ user_id: string; email: string; nom: string; role: string }> {
     return this.http
       .post<{ user_id: string; email: string; nom: string; role: string }>(

@@ -50,20 +50,20 @@ export class HomeComponent {
       filter: 'bon_commande',
     },
     {
-      label: 'Avoirs',
-      key: 'avoirs' as const,
-      icon: 'undo',
-      color: '#d32f2f',
-      route: '/documents',
-      filter: 'avoir',
-    },
-    {
       label: 'Devis',
       key: 'devis' as const,
       icon: 'request_quote',
       color: '#7b1fa2',
       route: '/documents',
       filter: 'devis',
+    },
+    {
+      label: 'Avoirs',
+      key: 'avoirs' as const,
+      icon: 'undo',
+      color: '#d32f2f',
+      route: '/documents',
+      filter: 'avoir',
     },
   ];
 

@@ -13,6 +13,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { DocumentsComponent } from './documents.component';
+import { BackButtonComponent } from '../../components/back-button/back-button.component';
 
 @NgModule({
   declarations: [DocumentsComponent],
@@ -30,6 +31,7 @@ import { DocumentsComponent } from './documents.component';
     MatTooltipModule,
     MatProgressSpinnerModule,
     MatMenuModule,
+    BackButtonComponent,
   ],
 })
 export class DocumentsModule {}

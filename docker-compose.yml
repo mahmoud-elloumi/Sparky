@@ -42,7 +42,7 @@ services:
       - APP_PORT=8000
       - SECRET_KEY=sparky-dev-secret-key-2026
       - DATABASE_URL=postgresql+asyncpg://sparky:sparky_pass@sparky-db:5432/sparky_db
-      - MISTRAL_API_KEY=${MISTRAL_API_KEY:-AlSTFcTTm2h5Lkizs3XoXkdiYnDSmZiu}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
       - MISTRAL_MODEL=${MISTRAL_MODEL:-mistral-small-latest}
       - MISTRAL_VISION_MODEL=${MISTRAL_VISION_MODEL:-pixtral-12b-2409}
       - N8N_WEBHOOK_URL=http://sparky-n8n:5678/webhook/sparky/notify

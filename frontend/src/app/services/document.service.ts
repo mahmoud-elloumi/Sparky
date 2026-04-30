@@ -164,10 +164,17 @@ export class DocumentService {
   // ---- Remove ----
 
   removeDocument(documentId: string): void {
-    this._documents.update(docs => {
-      const updated = docs.filter(d => d.document_id !== documentId);
-      this._saveToStorage(updated);
-      return updated;
+    this.api.deleteDocument(documentId).subscribe({
+      next: () => {
+        this._documents.update(docs => {
+          const updated = docs.filter(d => d.document_id !== documentId);
+          this._saveToStorage(updated);
+          return updated;
+        });
+      },
+      error: (err) => {
+        this._error.set('Suppression impossible: ' + (err?.message ?? err));
+      },
     });
   }
 

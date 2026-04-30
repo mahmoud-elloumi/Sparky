@@ -20,7 +20,6 @@ export class AppComponent implements OnInit {
     { label: 'Tableau de bord',      icon: 'dashboard',        route: '/home' },
     { label: 'Scanner',              icon: 'document_scanner', route: '/scanner' },
     { label: 'Documents',            icon: 'folder_open',      route: '/documents' },
-    { label: 'Prix fournisseurs',    icon: 'price_check',      route: '/catalogue-prix' },
     { label: 'Comparateur des prix', icon: 'compare_arrows',   route: '/comparer' },
   ];
 

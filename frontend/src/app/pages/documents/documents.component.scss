@@ -111,7 +111,7 @@
   padding: 80px 24px;
   animation: fadeUp .5s ease both;
 
-  mat-icon { font-size: 90px; color: #e8eaf6; width: 90px; height: 90px; margin-bottom: 20px; display: block; }
+  > mat-icon { font-size: 90px; color: #e8eaf6; width: 90px; height: 90px; margin: 0 auto 20px; display: block; }
   h2 { color: #555; margin-bottom: 8px; }
   p  { color: #aaa; margin-bottom: 28px; }
 }

@@ -34,7 +34,7 @@
         "jsCode": "const d = $input.first().json;\nconst typeLabels = { 'facture':'Facture','devis':'Devis','bon_livraison':'Bon de Livraison','bon_commande':'Bon de Commande','avoir':'Avoir' };\nconst typeLabel = typeLabels[d.type_document] || d.type_document || 'Inconnu';\nconst confiance = Math.round((d.score_confiance||0)*100);\nconst niveau = confiance>=85?'Eleve':confiance>=60?'Moyen':'Faible';\nconsole.log('Classification Mistral AI:', typeLabel, confiance+'%');\nreturn [{ json: { ...d, type_label: typeLabel, confiance_pct: confiance, confiance_niveau: niveau } }];"
       },
       "id": "node-classify",
-      "name": "3. Classification IA (Mistral AI)",
+      "name": "3. Labellisation Type Document",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [720, 400]
@@ -56,7 +56,7 @@
         "jsCode": "const d = $input.first().json;\nconst lignes = d.lignes || [];\nconst totalTTC = lignes.reduce((acc,l) => acc + Number(l.montant_ttc||0), 0);\nconsole.log('Extraction Mistral AI:', lignes.length, 'articles | TTC:', totalTTC.toFixed(3), 'TND');\nreturn [{ json: { ...d, nb_lignes: lignes.length, montant_ttc: d.montant_ttc || totalTTC.toFixed(3), extraction_moteur: d.is_image ? 'Mistral Vision (pixtral-12b-2409)' : 'Mistral Small (mistral-small-latest)' } }];"
       },
       "id": "node-extract",
-      "name": "5. Extraction Donnees IA (Mistral AI)",
+      "name": "5. Calcul Total & Métadonnées Modèle",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [1200, 400]
@@ -165,15 +165,15 @@
       "main": [[{ "node": "2. Validation et Detection Type", "type": "main", "index": 0 }]]
     },
     "2. Validation et Detection Type": {
-      "main": [[{ "node": "3. Classification IA (Mistral AI)", "type": "main", "index": 0 }]]
+      "main": [[{ "node": "3. Labellisation Type Document", "type": "main", "index": 0 }]]
     },
-    "3. Classification IA (Mistral AI)": {
+    "3. Labellisation Type Document": {
       "main": [[{ "node": "4. Resultat Classification", "type": "main", "index": 0 }]]
     },
     "4. Resultat Classification": {
-      "main": [[{ "node": "5. Extraction Donnees IA (Mistral AI)", "type": "main", "index": 0 }]]
+      "main": [[{ "node": "5. Calcul Total & Métadonnées Modèle", "type": "main", "index": 0 }]]
     },
-    "5. Extraction Donnees IA (Mistral AI)": {
+    "5. Calcul Total & Métadonnées Modèle": {
       "main": [[{ "node": "6. Resultat Extraction", "type": "main", "index": 0 }]]
     },
     "6. Resultat Extraction": {

@@ -1,9 +1,7 @@
 <div class="detail-page">
 
   <!-- Back button -->
-  <button mat-button class="back-btn" (click)="back()">
-    <mat-icon>arrow_back</mat-icon> Documents
-  </button>
+  <app-back-button></app-back-button>
 
   <!-- Not found -->
   <div *ngIf="!document" class="not-found">

@@ -357,7 +357,20 @@ export class ScannerComponent implements OnInit, OnDestroy {
   }
 
   get totalLignes(): number {
-    return this.lignes.reduce((s: number, l: any) => s + (Number(l.montant_ht) || 0), 0);
+    return this.lignes.reduce((s: number, l: any) => s + this.lineHt(l), 0);
+  }
+
+  private lineHt(l: any): number {
+    const ht = Number(l.montant_ht);
+    if (ht > 0) return ht;
+    const pu = Number(l.prix_unitaire) || 0;
+    const qte = Number(l.quantite) || 0;
+    const rem = Number(l.remise_pct) || 0;
+    if (pu > 0 && qte > 0) return pu * qte * (1 - rem / 100);
+    const ttc = Number(l.montant_ttc) || 0;
+    const tva = Number(l.tva_taux) || 0;
+    if (ttc > 0) return ttc / (1 + tva / 100);
+    return 0;
   }
 
   // Index of the ligne with lowest prix_unitaire (for green highlight)

@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PriceComparisonComponent } from './price-comparison.component';
+import { BackButtonComponent } from '../../components/back-button/back-button.component';
 
 @NgModule({
   declarations: [PriceComparisonComponent],
@@ -18,6 +19,7 @@ import { PriceComparisonComponent } from './price-comparison.component';
     MatButtonModule,
     MatProgressBarModule,
     MatTooltipModule,
+    BackButtonComponent,
   ],
 })
 export class PriceComparisonModule {}

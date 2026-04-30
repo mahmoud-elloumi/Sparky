@@ -58,7 +58,15 @@
       "Bash(./venv/Scripts/pip.exe install *)",
       "Bash(/c/Sparky_v2/backend/venv/Scripts/python.exe -c \"import fastapi, sqlalchemy, mistralai, passlib, bcrypt, email_validator; print\\('All imports OK'\\)\")",
       "Bash(./venv/Scripts/uvicorn.exe main:app --host 0.0.0.0 --port 8000)",
-      "Bash(findstr :8000)"
+      "Bash(findstr :8000)",
+      "Bash(curl -s -o /dev/null -w \"GET /api/health via proxy → HTTP %{http_code}\\\\n\" http://localhost:4200/api/health)",
+      "Bash(curl -s -o /dev/null -w \"Backend  /health  → HTTP %{http_code}\\\\n\" http://localhost:8000/health)",
+      "Bash(curl -s -o /dev/null -w \"Frontend /        → HTTP %{http_code}\\\\n\" http://localhost:4200/)",
+      "Bash(curl -s -o /dev/null -w \"Frontend /api/h  → HTTP %{http_code}\\\\n\" http://localhost:4200/api/health)",
+      "Bash(curl -s -o /dev/null -w \"n8n      /        → HTTP %{http_code}\\\\n\" http://localhost:5678/)",
+      "Bash(git -C c:/Sparky_v2 checkout HEAD -- frontend/src/app/pages/home/home.component.ts frontend/src/app/pages/home/home.component.html)",
+      "Bash(git -C c:/Sparky_v2 status --short frontend/src/app/pages/home/)",
+      "Bash(docker compose *)"
     ],
     "additionalDirectories": [
       "C:\\Sparky"

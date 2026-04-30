@@ -10,6 +10,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DocumentDetailComponent } from './document-detail.component';
+import { BackButtonComponent } from '../../components/back-button/back-button.component';
 
 @NgModule({
   declarations: [DocumentDetailComponent],
@@ -24,6 +25,7 @@ import { DocumentDetailComponent } from './document-detail.component';
     MatTableModule,
     MatProgressBarModule,
     MatTooltipModule,
+    BackButtonComponent,
   ],
 })
 export class DocumentDetailModule {}

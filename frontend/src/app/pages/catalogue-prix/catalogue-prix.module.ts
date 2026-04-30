@@ -11,6 +11,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CataloguePrixComponent } from './catalogue-prix.component';
+import { BackButtonComponent } from '../../components/back-button/back-button.component';
 
 @NgModule({
   declarations: [CataloguePrixComponent],
@@ -26,6 +27,7 @@ import { CataloguePrixComponent } from './catalogue-prix.component';
     MatTableModule,
     MatProgressBarModule,
     MatTooltipModule,
+    BackButtonComponent,
   ],
 })
 export class CataloguePrixModule {}

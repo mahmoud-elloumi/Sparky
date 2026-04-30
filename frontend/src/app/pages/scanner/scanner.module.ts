@@ -10,6 +10,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ScannerComponent } from './scanner.component';
+import { BackButtonComponent } from '../../components/back-button/back-button.component';
 
 @NgModule({
   declarations: [ScannerComponent],
@@ -24,6 +25,7 @@ import { ScannerComponent } from './scanner.component';
     MatTooltipModule,
     MatFormFieldModule,
     MatInputModule,
+    BackButtonComponent,
   ],
 })
 export class ScannerModule {}
